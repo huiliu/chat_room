@@ -1,0 +1,11 @@
+
+// 定义消息ID
+enum MessageID {
+    MSG_REQ_LOGIN  = 0;    // 请求登陆
+}
+
+// 消息包装层
+message RawMessage {
+    required MessageID  id      = 1;  // 消息ID
+    required string     strMsg  = 2;  // 消息内容。需要进一步解包
+}

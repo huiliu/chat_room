@@ -1,0 +1,17 @@
+
+// 网络基础信息
+
+enum CONN_STATUS
+{
+    CS_CONNECTED    = 0;    // 已连接
+    CS_ACKING       = 1;    // 认证中
+    CS_LOST         = 2;    // 连接丢失
+    CS_BROKEN       = 3;    // 连接断开
+}
+
+// 一个socket的信息
+message ConnInfo {
+    required uint64         userId = 1;     // 用户ID
+    required uint32         sockfd = 2;     // socket
+    required CONN_STATUS    status = 3;     // 连接状态
+}

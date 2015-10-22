@@ -8,6 +8,7 @@ using namespace Net;
 
 class ConfigFile;
 class NetSubscriber;
+class Timer;
 
 class ServerBase
 {
@@ -20,9 +21,11 @@ public:
 
     void Run();
 private:
+    boost::asio::io_service io_service;
     ConfigFile*         m_cfg;
     NetAcceptor*        m_pAcceptor;
     ConnectionManager*  m_pConnMgr;
+    Timer*              m_pTimer;
     NetSubscriber*      m_pSub;
 };
 

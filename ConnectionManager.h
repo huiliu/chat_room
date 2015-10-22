@@ -14,6 +14,12 @@ using namespace boost::asio::ip;
 class NetConnection;
 class ConnInfo;
 
+/*
+ * 管理客户端连接
+ * 分发接收到的网络消息
+ *
+ */
+
 class ConnectionManager : public iPublisher
 {
 public:

@@ -1,3 +1,6 @@
+/*
+ * author: LiuHui <hui.liu.e@gmail.com>
+ */
 #ifndef __NETACCEPTOR_H__
 #define __NETACCEPTOR_H__
 #include <boost/asio.hpp>
@@ -11,6 +14,9 @@ using namespace boost::asio;
 class ConnectionManager;
 class NetConnection;
 
+/*
+ * 侦听端口，等待客户端的连接
+ */
 
 class NetAcceptor
 {

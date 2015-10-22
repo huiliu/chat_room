@@ -3,7 +3,6 @@ import public "MessageID.proto";
 
 
 message ReqLogin {
-    required MessageID messageId    = 1;
     required string username        = 2;
     required string password        = 3;
 }

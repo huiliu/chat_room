@@ -8,7 +8,6 @@ ConnectionManager::ConnectionManager()
 : m_mapConn()
 , m_connId(0)
 {
-    Init();
 }
 
 ConnectionManager::~ConnectionManager()

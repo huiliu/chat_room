@@ -1,13 +1,15 @@
 #include "ServerBase.h"
 #include "ConfigFile.h"
 #include "NetSubscriber.h"
+#include "Timer.h"
 
 ServerBase::ServerBase()
 : m_cfg(nullptr)
 , m_pAcceptor(nullptr)
 , m_pConnMgr(nullptr)
+, m_pTimer(nullptr)
+, m_pSub(nullptr)
 {
-    Init();
 }
 
 ServerBase::~ServerBase()
@@ -21,7 +23,17 @@ int ServerBase::Init()
     //    return -1;
     //}
 
+
     m_pConnMgr = new ConnectionManager();
+    m_pConnMgr->Init();
+
+    m_pAcceptor = new NetAcceptor("127.0.0.1", 9090, io_service, m_pConnMgr);
+    m_pAcceptor->Init();
+
+    m_pTimer = new Timer(io_service, m_pConnMgr);
+    m_pTimer->Init();
+
+
     m_pSub = new NetSubscriber(m_pConnMgr);
     m_pSub->Init();
 
@@ -38,8 +50,7 @@ int ServerBase::Fini()
 
 void ServerBase::Run()
 {
-    boost::asio::io_service io_service;
-    m_pAcceptor = new NetAcceptor("127.0.0.1", 9090, io_service, m_pConnMgr);
+    m_pTimer->Start();
     m_pAcceptor->Start();
 
     io_service.run();

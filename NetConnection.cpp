@@ -49,7 +49,7 @@ void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_
     if (!err) {
         auto spMsg = std::make_shared<RawMessage>();
         spMsg->ParseFromString(m_buff);
-        m_pConnMgr->Notify(spMsg);
+        m_pConnMgr->PutInRecvQueue(m_connId, spMsg);
 
         Start();
     }

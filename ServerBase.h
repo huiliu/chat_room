@@ -7,6 +7,7 @@
 using namespace Net;
 
 class ConfigFile;
+class MessageManager;
 class NetSubscriber;
 class Timer;
 
@@ -23,7 +24,8 @@ public:
 private:
     boost::asio::io_service io_service;
     ConfigFile*         m_cfg;
-    NetAcceptor*        m_pAcceptor;
+    MessageManager*     m_pMsgMgr;
+    NetAcceptor*        m_pAcceptor;    // 侦听者
     ConnectionManager*  m_pConnMgr;
     Timer*              m_pTimer;
     NetSubscriber*      m_pSub;

@@ -1,15 +1,14 @@
 #ifndef __NETCONNECTION_H__
 #define __NETCONNECTION_H__
-#include <boost/asio.hpp>
 #include <memory>
+#include "CommonDataType.h"
 
 class RawMessage;
 namespace Net{
 
 using namespace boost::asio;
 
-const uint32_t RECEVIER_BUFFER_SIZE = 8196; // 接收网络数据缓冲区大小
-typedef uint32_t ConnID;
+const   uint32_t RECEVIER_BUFFER_SIZE = 8196; // 接收网络数据缓冲区大小
 
 class ConnectionManager;
 

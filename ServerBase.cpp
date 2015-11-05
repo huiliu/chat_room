@@ -2,9 +2,11 @@
 #include "ConfigFile.h"
 #include "NetSubscriber.h"
 #include "Timer.h"
+#include "MessageManager.h"
 
 ServerBase::ServerBase()
 : m_cfg(nullptr)
+, m_pMsgMgr(nullptr)
 , m_pAcceptor(nullptr)
 , m_pConnMgr(nullptr)
 , m_pTimer(nullptr)
@@ -24,17 +26,19 @@ int ServerBase::Init()
     //}
 
 
-    m_pConnMgr = new ConnectionManager();
+    m_pMsgMgr = new MessageManager();
+
+    m_pConnMgr = new ConnectionManager(m_pMsgMgr);
     m_pConnMgr->Init();
 
     m_pAcceptor = new NetAcceptor("127.0.0.1", 9090, io_service, m_pConnMgr);
     m_pAcceptor->Init();
 
-    m_pTimer = new Timer(io_service, m_pConnMgr);
+    m_pTimer = new Timer(io_service, m_pMsgMgr);
     m_pTimer->Init();
 
 
-    m_pSub = new NetSubscriber(m_pConnMgr);
+    m_pSub = new NetSubscriber(m_pMsgMgr);
     m_pSub->Init();
 
     return 0;
@@ -45,6 +49,7 @@ int ServerBase::Fini()
     delete m_pSub;
     delete m_pConnMgr;
     delete m_pAcceptor;
+    delete m_pMsgMgr;
     delete m_cfg;
 }
 

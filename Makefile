@@ -10,6 +10,7 @@ CXXFLAGS 	= -g -std=c++11 -Isrc
 LIBS = MessageID.pb.o Login.pb.o ConnectionInfo.pb.o ConnectionManager.o\
 	iPublisher.o iServerBase.o iSubscriber.o NetPublisher.o NetSubscriber.o\
 	ServerBase.o NetAcceptor.o NetConnection.o ConfigFile.o Timer.o\
+	MessageManager.o\
 	main.o
 TARGET = main
 
@@ -26,7 +27,7 @@ main: $(LIBS)
 	g++ $(LDFLAGS) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -f *.pb.* src/*.* *.o $(TARGET)
+	rm -f *.pb.* src/*.* python/*.* *.o $(TARGET)
 
 .PHONY: all proto clean main
 

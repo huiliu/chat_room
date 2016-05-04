@@ -8,7 +8,7 @@ class iPublisher;
 class NetSubscriber : public iSubscriber
 {
 public:
-    NetSubscriber(iPublisher* pPub);
+    NetSubscriber(std::shared_ptr<iPublisher> pPub);
     ~NetSubscriber();
 
     void Init();
@@ -23,7 +23,7 @@ private:
     void HandleSystemTick(std::shared_ptr<RawMessage> pMsg);
 
 private:
-    iPublisher* m_pPublisher;
+    std::shared_ptr<iPublisher> m_pPublisher;
 };
 
 

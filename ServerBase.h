@@ -3,11 +3,12 @@
 
 #include "ConnectionManager.h"
 #include "NetAcceptor.h"
+#include <memory>
 
 using namespace Net;
 
 class ConfigFile;
-class MessageManager;
+class MessageDispatcher;
 class NetSubscriber;
 class Timer;
 
@@ -23,12 +24,12 @@ public:
     void Run();
 private:
     boost::asio::io_service io_service;
-    ConfigFile*         m_cfg;
-    MessageManager*     m_pMsgMgr;
-    NetAcceptor*        m_pAcceptor;    // 侦听者
-    ConnectionManager*  m_pConnMgr;
-    Timer*              m_pTimer;
-    NetSubscriber*      m_pSub;
+    std::shared_ptr<ConfigFile>         m_spcfg;
+    std::shared_ptr<iPublisher>         m_spMsgMgr;
+    std::shared_ptr<NetAcceptor>        m_spAcceptor;    // 侦听者
+    std::shared_ptr<ConnectionManager>  m_spConnMgr;
+    std::shared_ptr<Timer>              m_spTimer;
+    std::shared_ptr<NetSubscriber>      m_spSub;
 };
 
 #endif

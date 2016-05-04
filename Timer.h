@@ -12,7 +12,7 @@ class RawMessage;
 class Timer
 {
 public:
-    Timer(boost::asio::io_service& io_service, iPublisher* pPublisher);
+    Timer(boost::asio::io_service& io_service, std::shared_ptr<iPublisher> pPublisher);
     virtual ~Timer();
 
     int Init();
@@ -26,7 +26,7 @@ private:
 
 private:
     boost::asio::deadline_timer m_timer;
-    iPublisher*                 m_pPublisher;
+    std::shared_ptr<iPublisher> m_pPublisher;
     std::shared_ptr<RawMessage> m_spMsg;
 };
 

@@ -21,7 +21,7 @@ class NetConnection;
 class NetAcceptor
 {
 public:
-    NetAcceptor (const char* ip, uint32_t port, boost::asio::io_service& service, ConnectionManager* pConnMgr);
+    NetAcceptor (const char* ip, uint32_t port, boost::asio::io_service& service, std::shared_ptr<ConnectionManager> pConnMgr);
     ~NetAcceptor ();
 
     int Init();
@@ -36,7 +36,7 @@ private:
     ip::address         m_IpAddress;
     uint32_t            m_Port;
     ip::tcp::acceptor   m_pAcceptor;
-    ConnectionManager*  m_pConnMgr;
+    std::shared_ptr<ConnectionManager>  m_pConnMgr;
 };
 
 }

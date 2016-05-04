@@ -1,6 +1,12 @@
 #ifndef __CONNECTIONMANAGER_H__
 #define __CONNECTIONMANAGER_H__
 
+//
+// 管理客户端连接
+// 分发接收到的网络消息
+//
+//
+
 #include <map>
 #include <queue>
 #include <memory>
@@ -18,16 +24,11 @@ class NetAcceptor;
 class NetConnection;
 class ConnInfo;
 
-/*
- * 管理客户端连接
- * 分发接收到的网络消息
- *
- */
 
 class ConnectionManager : public iSubscriber
 {
 public:
-    ConnectionManager(iPublisher* pMgr/*, boost::asio::io_service& io_service*/);
+    ConnectionManager(std::shared_ptr<iPublisher> spMgr);
     ~ConnectionManager();
 
     void Init();
@@ -61,15 +62,12 @@ private:
 private:
     typedef std::map<ConnID, NetConnection*> MAP_CONN;
 
-    iPublisher* m_pMgr;
+    std::shared_ptr<iPublisher> m_spMgr;
     MAP_CONN    m_mapConn;
     uint64_t    m_connId;
 
     std::deque<NetMessageEntity>  m_queueRecv;  // 消息接收队列
     std::deque<NetMessageEntity>  m_queueSend;  // 消息发送队列
-
-    boost::asio::io_service     m_ioService;
-    NetAcceptor*                m_pAcceptor;    // 侦听者
 };
 
 }

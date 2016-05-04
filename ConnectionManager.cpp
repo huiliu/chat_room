@@ -7,14 +7,12 @@
 namespace Net
 {
 
-ConnectionManager::ConnectionManager(iPublisher* pMgr/*, boost::asio::io_service& io_service*/)
-: m_pMgr(pMgr)
+ConnectionManager::ConnectionManager(std::shared_ptr<iPublisher> spMgr)
+: m_spMgr(spMgr)
 , m_mapConn()
 , m_connId(0)
 , m_queueRecv()
 , m_queueSend()
-, m_ioService()
-, m_pAcceptor(nullptr)
 {
 }
 
@@ -25,12 +23,12 @@ ConnectionManager::~ConnectionManager()
 
 void ConnectionManager::Init()
 {
-    m_pMgr->Attach(MSG_TIME_TICK, this);
+    m_spMgr->Attach(MSG_TIME_TICK, this);
 }
 
 void ConnectionManager::Fini()
 {
-    m_pMgr->Detach(MSG_TIME_TICK, this);
+    m_spMgr->Detach(MSG_TIME_TICK, this);
 
 
     for (auto& it : m_mapConn) {
@@ -142,7 +140,7 @@ void ConnectionManager::FlushRecvQueue()
 {
     while (!m_queueRecv.empty()) {
         NetMessageEntity& msg = m_queueRecv.front();
-        m_pMgr->Notify(msg.second);
+        m_spMgr->Notify(msg.second);
 
         m_queueRecv.pop_front();
     }

@@ -4,7 +4,7 @@
 #include "src/MessageID.pb.h"
 #include "src/Login.pb.h"
 
-NetSubscriber::NetSubscriber(iPublisher* pPub)
+NetSubscriber::NetSubscriber(std::shared_ptr<iPublisher> pPub)
 : m_pPublisher(pPub)
 {
 

@@ -6,7 +6,7 @@
 
 const int TIME_INTEVAL = 1;
 
-Timer::Timer(boost::asio::io_service& io, iPublisher* pPublisher)
+Timer::Timer(boost::asio::io_service& io, std::shared_ptr<iPublisher> pPublisher)
 : m_timer(io, boost::posix_time::seconds(TIME_INTEVAL))
 , m_pPublisher(pPublisher)
 , m_spMsg(nullptr)

@@ -2,15 +2,15 @@
 #include "ConfigFile.h"
 #include "NetSubscriber.h"
 #include "Timer.h"
-#include "MessageManager.h"
+#include "MessageDispatcher.h"
 
 ServerBase::ServerBase()
-: m_cfg(nullptr)
-, m_pMsgMgr(nullptr)
-, m_pAcceptor(nullptr)
-, m_pConnMgr(nullptr)
-, m_pTimer(nullptr)
-, m_pSub(nullptr)
+: m_spcfg(nullptr)
+, m_spMsgMgr(nullptr)
+, m_spAcceptor(nullptr)
+, m_spConnMgr(nullptr)
+, m_spTimer(nullptr)
+, m_spSub(nullptr)
 {
 }
 
@@ -26,37 +26,38 @@ int ServerBase::Init()
     //}
 
 
-    m_pMsgMgr = new MessageManager();
+    m_spMsgMgr = std::shared_ptr<iPublisher>(new MessageDispatcher());
 
-    m_pConnMgr = new ConnectionManager(m_pMsgMgr);
-    m_pConnMgr->Init();
+    m_spConnMgr = std::make_shared<ConnectionManager>(m_spMsgMgr);
+    m_spConnMgr->Init();
 
-    m_pAcceptor = new NetAcceptor("127.0.0.1", 9090, io_service, m_pConnMgr);
-    m_pAcceptor->Init();
+    m_spAcceptor = std::make_shared<NetAcceptor>("127.0.0.1", 9090, io_service, m_spConnMgr);
+    m_spAcceptor->Init();
 
-    m_pTimer = new Timer(io_service, m_pMsgMgr);
-    m_pTimer->Init();
+    m_spTimer = std::make_shared<Timer>(io_service, m_spMsgMgr);
+    m_spTimer->Init();
 
 
-    m_pSub = new NetSubscriber(m_pMsgMgr);
-    m_pSub->Init();
+    m_spSub = std::make_shared<NetSubscriber>(m_spMsgMgr);
+    m_spSub->Init();
 
     return 0;
 }
 
 int ServerBase::Fini()
 {
-    delete m_pSub;
-    delete m_pConnMgr;
-    delete m_pAcceptor;
-    delete m_pMsgMgr;
-    delete m_cfg;
+    //delete m_pSub;
+    //delete m_pConnMgr;
+    //delete m_pAcceptor;
+    //delete m_pMsgMgr;
+    //delete m_cfg;
+    return 0;
 }
 
 void ServerBase::Run()
 {
-    m_pTimer->Start();
-    m_pAcceptor->Start();
+    m_spTimer->Start();
+    m_spAcceptor->Start();
 
     io_service.run();
 }

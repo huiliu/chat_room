@@ -5,11 +5,11 @@
 
 
 // 消息管理器，用于分发网络消息，时间脉冲
-class MessageManager : public iPublisher
+class MessageDispatcher : public iPublisher
 {
 public:
-    MessageManager();
-    virtual ~MessageManager();
+    MessageDispatcher();
+    virtual ~MessageDispatcher();
 
 private:
     /* data */

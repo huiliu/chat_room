@@ -7,7 +7,7 @@
 namespace Net
 {
 
-NetAcceptor::NetAcceptor(const char* ipaddr, uint32_t port, boost::asio::io_service& service, ConnectionManager* pConnMgr)
+NetAcceptor::NetAcceptor(const char* ipaddr, uint32_t port, boost::asio::io_service& service, std::shared_ptr<ConnectionManager> pConnMgr)
 : m_pAcceptor(service, ip::tcp::endpoint(ip::address().from_string(ipaddr), port))
 , m_pConnMgr(pConnMgr)
 {
@@ -50,12 +50,13 @@ void NetAcceptor::AcceptHandler(ConnID cId, const boost::system::error_code& err
     if (!err && nullptr != pConn) {
         pConn->Start();
 
-        Start();
     }
     else
     {
         m_pConnMgr->RemoveConnection(cId);
     }
+
+    Start();
 }
 
 

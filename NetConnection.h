@@ -1,6 +1,10 @@
 #ifndef __NETCONNECTION_H__
 #define __NETCONNECTION_H__
+//
+// 表示一条socket连接，接收/发送消息
+// 
 #include <memory>
+#include <string>
 #include "CommonDataType.h"
 
 class RawMessage;
@@ -36,8 +40,9 @@ public:
 private:
     ConnID                      m_connId;
     ip::tcp::socket             m_socket;
-    char                        m_buff[RECEVIER_BUFFER_SIZE];
     ConnectionManager*          m_pConnMgr;
+    char                        m_readBuff[RECEVIER_BUFFER_SIZE];
+    std::string                 m_writeBuff;
 };
 
 }

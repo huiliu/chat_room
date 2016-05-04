@@ -1,0 +1,6 @@
+
+// 用户信息
+message Account {
+    required string name        = 1;
+    required string partment    = 2;
+}

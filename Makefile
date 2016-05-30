@@ -7,7 +7,8 @@ LDFLAGS 	= `pkg-config --libs protobuf` -lboost_filesystem -lboost_date_time\
 				-lboost_thread -lboost_system 
 CXXFLAGS 	= -g -Wall -std=c++11 -Isrc
 
-LIBS = MessageID.pb.o Login.pb.o ConnectionInfo.pb.o ConnectionManager.o\
+LIBS = MessageID.pb.o Login.pb.o UserData.pb.o ChatRoom.pb.o\
+	ConnectionInfo.pb.o ConnectionManager.o\
 	iPublisher.o iServerBase.o iSubscriber.o NetPublisher.o NetSubscriber.o\
 	ServerBase.o NetAcceptor.o NetConnection.o ConfigFile.o Timer.o\
 	MessageDispatcher.o\

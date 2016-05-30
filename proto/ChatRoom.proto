@@ -1,0 +1,95 @@
+// 聊天室协议
+import public "MessageID.proto";
+
+
+// 聊天室信息
+message CHATROOM_DATA {
+    
+    required int32 id      = 1;  // ID
+    required string name   = 2; // 名字
+    required string notice = 3; // 公告
+}
+
+
+message ReqChatroomList {
+
+}
+
+// 返回所有
+message NotifyChatroomList {
+    
+    repeated CHATROOM_DATA chatrooms = 1;
+}
+
+// 请求创建一个聊天室
+message ReqCreateChatroom {
+    
+    required string name   = 1;     // 名字
+    optional string notice = 2;     // 公告
+}
+
+// 创建聊天室的结果
+enum NOTIFY_CREATE_CHATROOM_RESULT {
+    NCCR_SUCCESS = 0;   // 创建成功
+}
+
+// 返回聊天室创建结果
+message NotifyCreateChatroomResult {
+    
+    required NOTIFY_CREATE_CHATROOM_RESULT result = 1;
+    optional CHATROOM_DATA chatroom               = 2;
+}
+
+// 请求加入聊天室
+message ReqJoinChatRoom {
+    
+    required int32 id = 1; // chatroom id
+}
+
+// TODO(liuhui): Describe this enum.
+enum NOTIFY_JOIN_CHATROOM_RESULT {
+    NJCR_SUCCESS = 0;   // 加入成功
+}
+
+message NotifyJoinChatroomResult
+{
+    required NOTIFY_JOIN_CHATROOM_RESULT result = 1;
+    optional CHATROOM_DATA chatroom = 2;
+}
+
+// 请求退出聊天室
+message ReqQuitChatroom
+{
+    required uint32 chatroom_id = 1;    // chatroom id
+}
+
+// TODO(liuhui): Describe this enum.
+enum NOTIFY_QUIT_CHATROOM_RESULT {
+    NQC_SUCCESS = 0;
+}
+
+message NotifyQuitChatroom
+{
+    required NOTIFY_QUIT_CHATROOM_RESULT result = 1;
+}
+
+// 聊天室发言类型
+enum CHATROOM_SPEAK_TYPE {
+    CST_ADMINISTRATOR = 0;  // root speak
+    CST_GENERAL = 1;    // 普通发言
+}
+
+// 聊天室发言
+message ReqChatroomSpeak
+{
+    required int32 id       = 1;  // chatroom id
+    required string content = 2; // 发言内容
+}
+
+message NotifyChatroomSpeak
+{
+    required int32 chatroom_id        = 1; // chat room id;
+    required CHATROOM_SPEAK_TYPE type = 2;
+    required string username          = 3;   // 发言人姓名
+    required string content           = 4;   // 发言内容
+}

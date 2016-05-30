@@ -1,12 +1,33 @@
 
 // 定义消息ID
 enum MessageID {
-    MSG_TIME_TICK   = 0;    // 时钟tick
-    MSG_REQ_LOGIN   = 1;    // 请求登陆
+    MSG_TIME_TICK                   = 0;    // 时钟tick
+    MSG_NOTIFY_VERSION              = 1;    // 通告协议号(S->C)
+    MSG_CHECK_VERSION_RESULT        = 2;
+
+    MSG_REQ_LOGIN                   = 3;    // 请求登陆
+    MSG_NOTIFY_LOGIN_RESULT         = 4;    // 登陆结果
+
+    MSG_REQ_CHATROOM_LIST           = 5;    // 请求聊天室列表
+    MSG_NOTIFY_CHATROOM_LIST        = 6;    // 返回聊天室信息
+
+    MSG_REQ_CREATE_CHATROOM         = 7;    // 请求创建一个聊天室
+    MSG_NOTIFY_CHATROOM_INFO        = 8;    // 返回聊天室信息
+
+    MSG_REQ_JOIN_CHATROOM           = 9;    // 请求加入聊天室
+    MSG_NOTIFY_JOIN_CHATROOM_RESULT = 10;    // 聊天室信息
+
+    MSG_REQ_QUIT_CHATROOM           = 11;    // 请求退出聊天室
+    MSG_NOTIFY_QUIT_CHATROOM_RESULT = 12;    // 退出结果
+
+    MSG_REQ_CHATROOM_SPEAK          = 13;   // 发言
+    MSG_NOTIFY_CHATROOM_SPEAK       = 14;   // 聊天室发言消息
+
+    MSG_REQ_ADMIN_SPEAK             = 15;   // 管理员公告
 }
 
 // 消息包装层
 message RawMessage {
-    required MessageID  id      = 1 [default = MSG_TIME_TICK];  // 消息ID。默认为tick
+    required MessageID  id      = 1 [default = MSG_TIME_TICK];  // 消息ID
     required string     strMsg  = 2;  // 消息内容。需要进一步解包
 }

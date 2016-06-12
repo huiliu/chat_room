@@ -19,13 +19,13 @@ iPublisher::~iPublisher()
     m_subscriber.clear();
 }
 
-bool iPublisher::Attach(MessageID id, iSubscriber* psub)
+bool iPublisher::Register(MessageID id, iSubscriber* psub)
 {
     m_subscriber[id].push_back(psub);
     return true;
 }
 
-bool iPublisher::Detach(MessageID id, iSubscriber* psub)
+bool iPublisher::Unregister(MessageID id, iSubscriber* psub)
 {
     MAP_MSG_SUBSCRIBER::iterator it = m_subscriber.find(id);
     if (m_subscriber.end() == it)

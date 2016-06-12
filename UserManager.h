@@ -17,9 +17,6 @@ public:
 
     UserData&   FindUser(uint32_t uid);
 
-    int         OnLogin(uint32_t uid);
-    int         OnLogout(uint32_t uid);
-
 private:
     std::shared_ptr<iPublisher> m_pPublisher;
     std::map<uint32_t, UserData> m_mapUserData;

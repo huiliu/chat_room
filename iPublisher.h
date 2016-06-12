@@ -14,10 +14,10 @@ public:
     virtual ~iPublisher() = 0;
 
      //将订阅者加入到消息队列
-    virtual bool Attach(MessageID id, iSubscriber* psub);
+    virtual bool Register(MessageID id, iSubscriber* psub);
 
     // 将订阅者从消息队列移除
-    virtual bool Detach(MessageID id, iSubscriber* psub);
+    virtual bool Unregister(MessageID id, iSubscriber* psub);
 
     // 向订阅者广播消息
     virtual void Notify(std::shared_ptr<RawMessage> pMsg);

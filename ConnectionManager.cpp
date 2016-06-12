@@ -23,12 +23,12 @@ ConnectionManager::~ConnectionManager()
 
 void ConnectionManager::Init()
 {
-    m_spMgr->Attach(MSG_TIME_TICK, this);
+    m_spMgr->Register(MSG_TIME_TICK, this);
 }
 
 void ConnectionManager::Fini()
 {
-    m_spMgr->Detach(MSG_TIME_TICK, this);
+    m_spMgr->Unregister(MSG_TIME_TICK, this);
 
 
     for (auto& it : m_mapConn) {

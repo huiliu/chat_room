@@ -5,6 +5,4 @@ import public "MessageID.proto";
 message UserData {
     required uint32 id       = 1;   // user id
     required string name     = 2;   // user name
-
-    required int32 socket_id = 3;   // user socket id
 }

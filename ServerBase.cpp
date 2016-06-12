@@ -46,11 +46,6 @@ int ServerBase::Init()
 
 int ServerBase::Fini()
 {
-    //delete m_pSub;
-    //delete m_pConnMgr;
-    //delete m_pAcceptor;
-    //delete m_pMsgMgr;
-    //delete m_cfg;
     return 0;
 }
 

@@ -3,6 +3,7 @@
 #include "ConnectionManager.h"
 #include <iostream>
 #include "src/MessageID.pb.h"
+#include "iCryptTool.h"
 
 namespace Net
 {
@@ -14,7 +15,6 @@ NetConnection::NetConnection(io_service& ioservice, ConnectionManager* pConnMgr)
 , m_bFirstPacket(true)
 , m_bSentCryptKey(false)
 , m_bVersionPassed(false)
-, m_bAccountPassed(false)
 {
 }
 
@@ -62,11 +62,7 @@ void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_
                                 spMsg->id() == MSG_CHECK_VERSION_RESULT) {
                 if (CheckVersion()) {
                     m_bVersionPassed = true;
-                    CheckAccount();
                 }
-            }
-            else if (m_bAccountPassed) {
-                m_pConnMgr->PutInRecvQueue(m_connId, spMsg);
             }
         }
 
@@ -96,7 +92,17 @@ void NetConnection::AsyncWriteHandler(const boost::system::error_code& err, size
 
 void NetConnection::SendCryptKey()
 {
+    std::shared_ptr<char> spKeyBuff = GenerateRandomChar();
+    m_spCryTool = CryptFactory(CT_NULL, spKeyBuff, g_key_buff_len);
 
+    boost::system::error_code ec;
+    // TODO: 此处需要调整
+    uint32_t sz = boost::asio::write(m_socket,
+            boost::asio::buffer(std::string(spKeyBuff.get())), ec);
+
+    if (g_key_buff_len != sz) {
+        assert("发送密钥失败！");
+    }
 }
 
 void NetConnection::SendVersion()
@@ -105,10 +111,7 @@ void NetConnection::SendVersion()
 
 bool NetConnection::CheckVersion()
 {
-}
-
-bool NetConnection::CheckAccount()
-{
+    return true;
 }
 
 }

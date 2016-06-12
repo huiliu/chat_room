@@ -21,13 +21,13 @@ int EventManager::Init()
         assert(false);
         return -1;
     }
-    m_pPublisher->Attach(MSG_TIME_TICK, this);
+    m_pPublisher->Register(MSG_TIME_TICK, this);
     return 0;
 }
 
 int EventManager::Fini()
 {
-    m_pPublisher->Detach(MSG_TIME_TICK, this);
+    m_pPublisher->Unregister(MSG_TIME_TICK, this);
 
     return 0;
 }

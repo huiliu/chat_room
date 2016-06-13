@@ -1,5 +1,6 @@
 #include "SessionManager.h"
 #include "iPublisher.h"
+#include "src/Login.pb.h"
 
 SessionManager::SessionManager(std::shared_ptr<iPublisher> spPublisher)
     : m_spPublisher(spPublisher)
@@ -25,6 +26,9 @@ int SessionManager::Fini()
 void SessionManager::HandleMessage(std::shared_ptr<RawMessage> spMsg)
 {
     switch (spMsg->id()) {
+        case MSG_CHECK_VERSION:
+            HandleVersionCheck(spMsg);
+            break;
         case MSG_REQ_LOGIN:
             HandleReqLogin(spMsg);
             break;
@@ -33,9 +37,13 @@ void SessionManager::HandleMessage(std::shared_ptr<RawMessage> spMsg)
     }
 }
 
+void SessionManager::HandleVersionCheck(std::shared_ptr<RawMessage> spMsg)
+{
+}
+
 void SessionManager::HandleReqLogin(std::shared_ptr<RawMessage> spMsg)
 {
-
+    NotifyLoginResult notify;
 }
 
 void SessionManager::HandleLogout(std::shared_ptr<RawMessage> spMsg)

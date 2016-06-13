@@ -1,0 +1,16 @@
+/*******************************************************************************
+ * FileName     : version.proto
+ * Author       : liuhui <hui.liu.e@gmail.com>
+ * Last Modified: 2016-06-14 00:59:16
+ * Description  : 协议版本号
+ ******************************************************************************/
+
+ import public "MessageID.proto";
+
+// S -> C 检查协议版本号
+message ReqCheckVersion {
+    
+    required MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
+
+    required int32      iVersionNumber = 2 [default = 1];
+}

@@ -25,7 +25,7 @@ class NetConnection;
 class ConnInfo;
 
 
-class ConnectionManager : public iSubscriber
+class ConnectionManager : public iSubscriber , public std::enable_shared_from_this<ConnectionManager>
 {
 public:
     ConnectionManager(std::shared_ptr<iPublisher> spMgr);
@@ -36,8 +36,8 @@ public:
 
     virtual void HandleMessage(SpRawMessage spMsg);
 
-    NetConnection* CreateConnection(boost::asio::io_service& io_service);
-    NetConnection* FindConnection(ConnID cId);
+    std::shared_ptr<NetConnection> CreateConnection(boost::asio::io_service& io_service);
+    std::shared_ptr<NetConnection> FindConnection(ConnID cId);
 
     void RemoveConnection(ConnID cid);
     void UpdateConnStatus(uint64_t, CONN_STATUS status);
@@ -60,7 +60,7 @@ private:
     void HandleSystemTimeTick(SpRawMessage spMsg);
 
 private:
-    typedef std::map<ConnID, NetConnection*> MAP_CONN;
+    typedef std::map<ConnID, std::shared_ptr<NetConnection>> MAP_CONN;
 
     std::shared_ptr<iPublisher> m_spMgr;
     MAP_CONN    m_mapConn;

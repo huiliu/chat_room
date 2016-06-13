@@ -20,7 +20,7 @@ class ConnectionManager;
 class NetConnection
 {
 public:
-    NetConnection (io_service& Ioservice, ConnectionManager* pConnMgr);
+    NetConnection (io_service& Ioservice, std::shared_ptr<ConnectionManager> spConnMgr);
     ~NetConnection ();
 
     int Init();
@@ -45,19 +45,16 @@ private:
 
     void    SendCryptKey();     // 发送密钥
     void    SendVersion();      // 发送协议号
-    bool    CheckVersion();     // 检查版本
 
 private:
     ConnID                      m_connId;
     ip::tcp::socket             m_socket;
-    ConnectionManager*          m_pConnMgr;
+    std::shared_ptr<ConnectionManager>          m_spConnMgr;
     char                        m_readBuff[RECEVIER_BUFFER_SIZE];
     std::string                 m_writeBuff;
     std::shared_ptr<iCryptTool> m_spCryTool;
 
     bool                        m_bFirstPacket;     // 第一个网络包
-    bool                        m_bSentCryptKey;    // 是否已经发送密钥
-    bool                        m_bVersionPassed;   // 版本检查是否通过
 };
 
 }

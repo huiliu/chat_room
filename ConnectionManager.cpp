@@ -30,10 +30,6 @@ void ConnectionManager::Fini()
 {
     m_spMgr->Unregister(MSG_TIME_TICK, this);
 
-
-    for (auto& it : m_mapConn) {
-        delete it.second;
-    }
     m_mapConn.clear();
 }
 
@@ -56,7 +52,6 @@ void ConnectionManager::HandleSystemTimeTick(SpRawMessage /* spMsg */)
 {
     // 根据系统时间脉冲来冲刷发送队列
     FlushSendQueue();
-
     FlushRecvQueue();
 }
 
@@ -70,9 +65,9 @@ void ConnectionManager::RemoveConnection(ConnID cid)
     }
 }
 
-NetConnection* ConnectionManager::FindConnection(ConnID cId)
+std::shared_ptr<NetConnection> ConnectionManager::FindConnection(ConnID cId)
 {
-    NetConnection* retVal = nullptr;
+    std::shared_ptr<NetConnection> retVal = nullptr;
     MAP_CONN::iterator it = m_mapConn.find(cId);
 
     if (m_mapConn.end() != it) {
@@ -92,14 +87,14 @@ void ConnectionManager::UpdateConnStatus(uint64_t uid, CONN_STATUS status)
     */
 }
 
-NetConnection* ConnectionManager::CreateConnection(boost::asio::io_service& io_service)
+std::shared_ptr<NetConnection> ConnectionManager::CreateConnection(boost::asio::io_service& io_service)
 {
     ++m_connId;
-    NetConnection* pConn = new NetConnection(io_service, this); 
-    pConn->SetConnId(m_connId);
+    std::shared_ptr<NetConnection> spConn = std::make_shared<NetConnection>(io_service, shared_from_this()); 
+    spConn->SetConnId(m_connId);
 
-    m_mapConn.insert(std::make_pair(m_connId, pConn));
-    return pConn;
+    m_mapConn.insert(std::make_pair(m_connId, spConn));
+    return spConn;
 }
 
 void ConnectionManager::PutInSendQueue(ConnID connId, std::shared_ptr<RawMessage> spMsg)
@@ -112,10 +107,10 @@ void ConnectionManager::FlushSendQueue()
     // Maybe 需要一些控制
     while (!m_queueSend.empty()) {
         NetMessageEntity& item = m_queueSend.front();
-        NetConnection* pConn = FindConnection(item.first);
-        BOOST_ASSERT(nullptr != pConn);
-        if (nullptr != pConn) {
-            pConn->SendPacket(item.second);
+        std::shared_ptr<NetConnection> spConn = FindConnection(item.first);
+        BOOST_ASSERT(nullptr != spConn);
+        if (nullptr != spConn) {
+            spConn->SendPacket(item.second);
         }
         m_queueSend.pop_front();
     }

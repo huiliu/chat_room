@@ -12,12 +12,10 @@ NetAcceptor::NetAcceptor(const char* ipaddr, uint32_t port, boost::asio::io_serv
 , m_pConnMgr(pConnMgr)
 {
     m_IpAddress.from_string(ipaddr);
-    Init();
 }
 
 NetAcceptor::~NetAcceptor()
 {
-    Fini();
 }
 
 int NetAcceptor::Init()
@@ -36,19 +34,19 @@ void NetAcceptor::Start()
         assert(false);
         return;
     }
-    NetConnection* pConn = m_pConnMgr->CreateConnection(m_pAcceptor.get_io_service());
-    m_pAcceptor.async_accept(pConn->socket(),
+    std::shared_ptr<NetConnection> spConn = m_pConnMgr->CreateConnection(m_pAcceptor.get_io_service());
+    m_pAcceptor.async_accept(spConn->socket(),
         boost::bind(&NetAcceptor::AcceptHandler, this,
-            pConn->GetConnId(), 
+            spConn->GetConnId(), 
             boost::asio::placeholders::error));
 
 }
 
 void NetAcceptor::AcceptHandler(ConnID cId, const boost::system::error_code& err)
 {
-    NetConnection* pConn = m_pConnMgr->FindConnection(cId);
-    if (!err && nullptr != pConn) {
-        pConn->Start();
+    std::shared_ptr<NetConnection> spConn = m_pConnMgr->FindConnection(cId);
+    if (!err && nullptr != spConn) {
+        spConn->Start();
 
     }
     else

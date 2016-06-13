@@ -25,6 +25,7 @@ public:
     virtual void HandleMessage(std::shared_ptr<RawMessage> spMsg);
 
 private:
+    void        HandleVersionCheck(std::shared_ptr<RawMessage> spMsg);
     void        HandleReqLogin(std::shared_ptr<RawMessage> spMsg);
     void        HandleLogout(std::shared_ptr<RawMessage> spMsg);
 

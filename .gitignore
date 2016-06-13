@@ -1,5 +1,3 @@
 *.o
 .*.swp
-src/*.*
-python/*.*
 main

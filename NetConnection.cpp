@@ -3,18 +3,17 @@
 #include "ConnectionManager.h"
 #include <iostream>
 #include "src/MessageID.pb.h"
+#include "src/version.pb.h"
 #include "iCryptTool.h"
 
 namespace Net
 {
 
-NetConnection::NetConnection(io_service& ioservice, ConnectionManager* pConnMgr)
+NetConnection::NetConnection(io_service& ioservice, std::shared_ptr<ConnectionManager> spConnMgr)
 : m_connId(0)
 , m_socket(ip::tcp::socket(ioservice))
-, m_pConnMgr(pConnMgr)
+, m_spConnMgr(spConnMgr)
 , m_bFirstPacket(true)
-, m_bSentCryptKey(false)
-, m_bVersionPassed(false)
 {
 }
 
@@ -49,21 +48,19 @@ void NetConnection::SendPacket(std::shared_ptr<RawMessage> pMsg)
 void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_t byte_transferred)
 {
     if (!err) {
-        auto spMsg = std::make_shared<RawMessage>();
-        // bool ParseFromString(const string& data)
-        if (spMsg->ParseFromString(m_readBuff)) {
-            if (m_bFirstPacket) {
-                m_bFirstPacket = false;
+        if (m_bFirstPacket) {
+            m_bFirstPacket = false;
+            SendCryptKey();
 
-                SendCryptKey();
-                SendVersion();
-            }
-            else if (!m_bVersionPassed &&
-                                spMsg->id() == MSG_CHECK_VERSION_RESULT) {
-                if (CheckVersion()) {
-                    m_bVersionPassed = true;
-                }
-            }
+            SendVersion();
+            return;
+        }
+
+        Decrypt(std::shared_ptr<char>(m_readBuff), byte_transferred);
+
+        auto spMsg = std::make_shared<RawMessage>();
+        if (spMsg->ParseFromString(m_readBuff)) {
+            m_spConnMgr->PutInRecvQueue(m_connId, spMsg);    
         }
 
         Start();
@@ -107,11 +104,12 @@ void NetConnection::SendCryptKey()
 
 void NetConnection::SendVersion()
 {
-}
+    ReqCheckVersion req;
+    std::shared_ptr<RawMessage> spRaw(new RawMessage());
+    spRaw->set_id(req.msg_id());
+    spRaw->set_strmsg(req.SerializeAsString());
 
-bool NetConnection::CheckVersion()
-{
-    return true;
+    m_spConnMgr->PutInSendQueue(m_connId, spRaw);
 }
 
 void NetConnection::Encrypt(std::shared_ptr<char> spData, uint32_t sz)

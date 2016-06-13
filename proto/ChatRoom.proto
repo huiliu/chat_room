@@ -13,20 +13,22 @@ message CHATROOM_DATA {
 
 // 请求所有聊天室
 message ReqChatroomList {
-
+    required MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_LIST];
 }
 
 // 返回所有聊天室信息
 message NotifyChatroomList {
     
-    repeated CHATROOM_DATA chatrooms = 1;
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CHATROOM_LIST];
+    repeated CHATROOM_DATA chatrooms = 2;
 }
 
 // 请求创建一个聊天室
 message ReqCreateChatroom {
     
-    required string name   = 1;     // 名字
-    optional string notice = 2;     // 公告
+    required MessageID  msg_id = 1 [default = MSG_REQ_CREATE_CHATROOM];
+    required string name   = 2;     // 名字
+    optional string notice = 3;     // 公告
 }
 
 // 创建聊天室的结果
@@ -38,14 +40,16 @@ enum NOTIFY_CREATE_CHATROOM_RESULT {
 // 返回聊天室创建结果
 message NotifyCreateChatroomResult {
     
-    required NOTIFY_CREATE_CHATROOM_RESULT result = 1;
-    optional CHATROOM_DATA chatroom               = 2;
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CREATE_CHATROOM_RESULT];
+    required NOTIFY_CREATE_CHATROOM_RESULT result = 2;
+    optional CHATROOM_DATA chatroom               = 3;
 }
 
 // 请求加入聊天室
 message ReqJoinChatRoom {
     
-    required int32 id = 1; // chatroom id
+    required MessageID  msg_id = 1 [default = MSG_REQ_JOIN_CHATROOM];
+    required int32 id = 2; // chatroom id
 }
 
 // 请求加入聊天室
@@ -55,15 +59,17 @@ enum NOTIFY_JOIN_CHATROOM_RESULT {
 
 message NotifyJoinChatroomResult
 {
-    required NOTIFY_JOIN_CHATROOM_RESULT result = 1;
-    optional CHATROOM_DATA chatroom             = 2;
-    repeated UserData   users                   = 3;
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_JOIN_CHATROOM_RESULT];
+    required NOTIFY_JOIN_CHATROOM_RESULT result = 2;
+    optional CHATROOM_DATA chatroom             = 3;
+    repeated UserData   users                   = 4;
 }
 
 // 请求退出聊天室
 message ReqQuitChatroom
 {
-    required uint32 chatroom_id = 1;    // chatroom id
+    required MessageID  msg_id = 1 [default = MSG_REQ_QUIT_CHATROOM];
+    required uint32 chatroom_id = 2;    // chatroom id
 }
 
 // 退出聊天室
@@ -73,7 +79,8 @@ enum NOTIFY_QUIT_CHATROOM_RESULT {
 
 message NotifyQuitChatroom
 {
-    required NOTIFY_QUIT_CHATROOM_RESULT result = 1;
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_QUIT_CHATROOM_RESULT];
+    required NOTIFY_QUIT_CHATROOM_RESULT result = 2;
 }
 
 // 聊天室发言类型
@@ -85,15 +92,18 @@ enum CHATROOM_SPEAK_TYPE {
 // 聊天室发言
 message ReqChatroomSpeak
 {
-    required int32 id       = 1;  // chatroom id
-    required string content = 2; // 发言内容
+    required MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_SPEAK];
+    required int32 id       = 2;  // chatroom id
+    required string content = 3; // 发言内容
 }
 
 // 广播发言
 message NotifyChatroomSpeak
 {
-    required int32 chatroom_id        = 1; // chat room id;
-    required CHATROOM_SPEAK_TYPE type = 2;
-    required string username          = 3;   // 发言人姓名
-    required string content           = 4;   // 发言内容
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CHATROOM_SPEAK];
+    required int32 chatroom_id        = 2; // chat room id;
+    required CHATROOM_SPEAK_TYPE type = 3;
+    required string username          = 4;   // 发言人姓名
+    required string content           = 5;   // 发言内容
 }
+

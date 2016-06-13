@@ -47,8 +47,6 @@ private:
     void    HandleReqQuitChatroom(std::shared_ptr<RawMessage> spMsg);
     // 请求发言聊天室
     void    HandleReqChatroomSpeak(std::shared_ptr<RawMessage> spMsg);
-    // 管理员发言
-    void    HandleReqAdminSpeak(std::shared_ptr<RawMessage> spMsg);
 
 private:
     std::shared_ptr<iPublisher> m_spPublisher;

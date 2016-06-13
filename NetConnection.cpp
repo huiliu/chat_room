@@ -114,4 +114,18 @@ bool NetConnection::CheckVersion()
     return true;
 }
 
+void NetConnection::Encrypt(std::shared_ptr<char> spData, uint32_t sz)
+{
+    if (nullptr != m_spCryTool) {
+        m_spCryTool->Encrypt(spData, sz);    
+    }
+}
+
+void NetConnection::Decrypt(std::shared_ptr<char> spData, uint32_t sz)
+{
+    if (nullptr != m_spCryTool) {
+        m_spCryTool->Decrypt(spData, sz);
+    }
+}
+
 }

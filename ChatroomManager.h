@@ -13,10 +13,14 @@ class ChatroomManager : public iSubscriber
 {
 public:
     ChatroomManager(std::shared_ptr<iPublisher> spPublisher);
-    virtual ~ChatroomManager ();
+    ~ChatroomManager ();
 
-    void Init();
-    void Fini();
+    ChatroomManager(const ChatroomManager& other) = delete;
+    ChatroomManager(ChatroomManager&& other)      = delete;
+    ChatroomManager& operator=(const ChatroomManager& other) = delete;
+
+    int Init();
+    int Fini();
 
     virtual void HandleMessage(std::shared_ptr<RawMessage> spMsg);
 
@@ -33,14 +37,21 @@ private:
 
     uint32_t GenerateChatroomId();
 
-    void    HandleReqCreateChatroom(std::shared_ptr<RawMessage> spMsg);
+    // 请求聊天室列表
     void    HandleReqChatroomList(std::shared_ptr<RawMessage> spMsg);
+    // 请求创建一个聊天室
+    void    HandleReqCreateChatroom(std::shared_ptr<RawMessage> spMsg);
+    // 请求加入聊天室
     void    HandleReqJoinChatroom(std::shared_ptr<RawMessage> spMsg);
+    // 请求退出聊天室
     void    HandleReqQuitChatroom(std::shared_ptr<RawMessage> spMsg);
-    void    HandleReqSpeakInChatroom(std::shared_ptr<RawMessage> spMsg);
+    // 请求发言聊天室
+    void    HandleReqChatroomSpeak(std::shared_ptr<RawMessage> spMsg);
+    // 管理员发言
+    void    HandleReqAdminSpeak(std::shared_ptr<RawMessage> spMsg);
 
 private:
-    std::shared_ptr<iPublisher> m_pPublisher;
+    std::shared_ptr<iPublisher> m_spPublisher;
     MapChatRoomType             m_mapChatroom;
 };
 

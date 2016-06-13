@@ -11,6 +11,8 @@ class ConfigFile;
 class MessageDispatcher;
 class NetSubscriber;
 class Timer;
+class ChatroomManager;
+class UserManager;
 
 class ServerBase
 {
@@ -30,6 +32,8 @@ private:
     std::shared_ptr<ConnectionManager>  m_spConnMgr;
     std::shared_ptr<Timer>              m_spTimer;
     std::shared_ptr<NetSubscriber>      m_spSub;
+    std::shared_ptr<ChatroomManager>    m_spChatroomMgr;
+    std::shared_ptr<UserManager>        m_spUserMgr;
 };
 
 #endif

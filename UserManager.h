@@ -10,15 +10,15 @@ public:
     UserManager(std::shared_ptr<iPublisher> spPublisher);
     ~UserManager ();
 
-    void Init();
-    void Fini();
+    int Init();
+    int Fini();
 
     virtual void HandleMessage(std::shared_ptr<RawMessage> spMsg);
 
     UserData&   FindUser(uint32_t uid);
 
 private:
-    std::shared_ptr<iPublisher> m_pPublisher;
+    std::shared_ptr<iPublisher> m_spPublisher;
     std::map<uint32_t, UserData> m_mapUserData;
 };
 #endif /* ifndef __USERMANAGER_H__ */

@@ -38,6 +38,7 @@ void NetConnection::Start()
 void NetConnection::SendPacket(std::shared_ptr<RawMessage> pMsg)
 {
     pMsg->SerializeToString(&m_writeBuff);
+    //Encrypt(m_writeBuff.c_str(), m_writeBuff.size());
     boost::asio::async_write(m_socket,
                             boost::asio::buffer(m_writeBuff),
                             boost::bind(&NetConnection::AsyncWriteHandler, this,

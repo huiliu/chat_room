@@ -16,14 +16,28 @@ class UserManager;
 
 class ServerBase
 {
-public:
+private:
     ServerBase();
+    ServerBase(const ServerBase&) = delete;
+    ServerBase(ServerBase&&) = delete;
+    ServerBase& operator=(const ServerBase&) = delete;
+
+public:
     ~ServerBase();
+
+    static ServerBase* GetInstance();
 
     int Init();
     int Fini();
 
+    std::shared_ptr<ConnectionManager>  GetConnMgr() { return m_spConnMgr; }
+    std::shared_ptr<ChatroomManager>    GetChatroomMgr() { return m_spChatroomMgr; }
+    std::shared_ptr<UserManager>        GetUserMgr() { return m_spUserMgr; }
+
     void Run();
+
+private:
+    static ServerBase*  m_sInstance;
 private:
     boost::asio::io_service io_service;
     std::shared_ptr<ConfigFile>         m_spcfg;

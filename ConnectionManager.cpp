@@ -18,19 +18,20 @@ ConnectionManager::ConnectionManager(std::shared_ptr<iPublisher> spMgr)
 
 ConnectionManager::~ConnectionManager()
 {
-    Fini();
 }
 
-void ConnectionManager::Init()
+int ConnectionManager::Init()
 {
     m_spMgr->Register(MSG_TIME_TICK, this);
+    return 0;
 }
 
-void ConnectionManager::Fini()
+int ConnectionManager::Fini()
 {
     m_spMgr->Unregister(MSG_TIME_TICK, this);
 
     m_mapConn.clear();
+    return 0;
 }
 
 void ConnectionManager::HandleMessage(SpRawMessage spMsg)

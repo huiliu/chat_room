@@ -31,8 +31,12 @@ public:
     ConnectionManager(std::shared_ptr<iPublisher> spMgr);
     ~ConnectionManager();
 
-    void Init();
-    void Fini();
+    ConnectionManager(const ConnectionManager&) = delete;
+    ConnectionManager(ConnectionManager&&) = delete;
+    ConnectionManager& operator=(const ConnectionManager&) = delete;
+
+    int Init();
+    int Fini();
 
     virtual void HandleMessage(SpRawMessage spMsg);
 

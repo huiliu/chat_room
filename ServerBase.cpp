@@ -6,6 +6,8 @@
 #include "UserManager.h"
 #include "ChatroomManager.h"
 
+ServerBase* ServerBase::m_sInstance = nullptr;
+
 ServerBase::ServerBase()
 : m_spcfg(nullptr)
 , m_spMsgMgr(nullptr)
@@ -19,6 +21,15 @@ ServerBase::ServerBase()
 ServerBase::~ServerBase()
 {
     Fini();
+}
+
+ServerBase* ServerBase::GetInstance()
+{
+    if (nullptr == m_sInstance) {
+        m_sInstance = new ServerBase();
+        m_sInstance->Init();
+    }
+    return m_sInstance;
 }
 
 int ServerBase::Init()

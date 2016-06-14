@@ -2,9 +2,8 @@
 
 int main(int argc, char *argv[])
 {
-    ServerBase base;
+    ServerBase* base = ServerBase::GetInstance();
 
-    base.Init();
-    base.Run();
+    base->Run();
     return 0;
 }

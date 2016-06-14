@@ -3,6 +3,7 @@
 #include "CommonApi.h"
 #include "User.h"
 #include "NetApi.h"
+#include "src/ChatRoom.pb.h"
 
 ChatroomManager::ChatroomManager(std::shared_ptr<iPublisher> spPublisher)
 : m_spPublisher(spPublisher)
@@ -103,17 +104,27 @@ void ChatroomManager::HandleReqCreateChatroom(std::shared_ptr<RawMessage> spMsg)
     req.ParseFromString(spMsg->strmsg());
 
     UserSmartPtr spUser = ::FindUserById(spMsg->uid());
-    CHECK_NULL_ASSERT(spMsg);
+    CHECK_NULL_ASSERT(spUser);
 
     CHATROOM_DATA data = CreateChatroom(req.name(), req.notice());
 
     NotifyCreateChatroomResult notify;
     notify.set_result(NCCR_SUCCESS);
+    CHATROOM_DATA* pData = notify.mutable_chatroom();
+    *pData = data;
+
+    NetApi::SendPacketToUser(spUser, notify);
 
 }
 
 void ChatroomManager::HandleReqJoinChatroom(std::shared_ptr<RawMessage> spMsg)
 {
+    CHECK_NULL_ASSERT(spMsg);
+    ReqJoinChatRoom req;
+    req.ParseFromString(spMsg->strmsg());
+
+    UserSmartPtr spUser = ::FindUserById(spMsg->uid());
+    CHECK_NULL_ASSERT(spUser);
 }
 
 void ChatroomManager::HandleReqQuitChatroom(std::shared_ptr<RawMessage> spMsg)

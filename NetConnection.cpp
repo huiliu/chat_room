@@ -60,6 +60,7 @@ void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_
         Decrypt(std::shared_ptr<char>(m_readBuff), byte_transferred);
 
         auto spMsg = std::make_shared<RawMessage>();
+        spMsg->set_clientid(GetConnId());
         if (spMsg->ParseFromString(m_readBuff)) {
             m_spConnMgr->PutInRecvQueue(m_connId, spMsg);    
         }

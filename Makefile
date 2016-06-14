@@ -13,7 +13,7 @@ LIBS = MessageID.pb.o Login.pb.o UserData.pb.o ChatRoom.pb.o\
 	iPublisher.o iServerBase.o iSubscriber.o NetPublisher.o NetSubscriber.o\
 	ServerBase.o NetAcceptor.o NetConnection.o ConfigFile.o Timer.o\
 	MessageDispatcher.o iCryptTool.o SessionManager.o ChatroomManager.o\
-	UserManager.o\
+	User.o UserManager.o CommonApi.o\
 	main.o
 TARGET = main
 

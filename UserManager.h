@@ -4,6 +4,11 @@
 #include "src/UserData.pb.h"
 #include <map>
 
+class User;
+
+typedef std::map<uint32_t, std::shared_ptr<User>> UserMapType;
+typedef UserMapType::iterator   UserMapTypeIterator;
+
 class UserManager : public iSubscriber
 {
 public:
@@ -15,10 +20,11 @@ public:
 
     virtual void HandleMessage(std::shared_ptr<RawMessage> spMsg);
 
-    UserData&   FindUser(uint32_t uid);
+    std::shared_ptr<User>   CreateUser(const UserData& data);
+    std::shared_ptr<User>   FindUser(uint32_t uid);
 
 private:
     std::shared_ptr<iPublisher> m_spPublisher;
-    std::map<uint32_t, UserData> m_mapUserData;
+    UserMapType m_mapUserData;
 };
 #endif /* ifndef __USERMANAGER_H__ */

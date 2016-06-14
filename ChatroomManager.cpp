@@ -1,5 +1,8 @@
 #include "ChatroomManager.h"
 #include "iPublisher.h"
+#include "CommonApi.h"
+#include "User.h"
+#include "NetApi.h"
 
 ChatroomManager::ChatroomManager(std::shared_ptr<iPublisher> spPublisher)
 : m_spPublisher(spPublisher)
@@ -78,10 +81,35 @@ void ChatroomManager::HandleMessage(std::shared_ptr<RawMessage> spMsg)
 
 void ChatroomManager::HandleReqChatroomList(std::shared_ptr<RawMessage> spMsg)
 {
+    CHECK_NULL_ASSERT(spMsg);
+
+    UserSmartPtr spUser = ::FindUserById(spMsg->uid());
+    CHECK_NULL_ASSERT(spMsg);
+
+    NotifyChatroomList notify;
+
+    for (auto& item : m_mapChatroom) {
+        CHATROOM_DATA* pData = notify.add_chatrooms();
+        *pData = item.second;
+    }
+
+    NetApi::SendPacketToUser(spUser, notify);
 }
 
 void ChatroomManager::HandleReqCreateChatroom(std::shared_ptr<RawMessage> spMsg)
 {
+    CHECK_NULL_ASSERT(spMsg);
+    ReqCreateChatroom req;
+    req.ParseFromString(spMsg->strmsg());
+
+    UserSmartPtr spUser = ::FindUserById(spMsg->uid());
+    CHECK_NULL_ASSERT(spMsg);
+
+    CHATROOM_DATA data = CreateChatroom(req.name(), req.notice());
+
+    NotifyCreateChatroomResult notify;
+    notify.set_result(NCCR_SUCCESS);
+
 }
 
 void ChatroomManager::HandleReqJoinChatroom(std::shared_ptr<RawMessage> spMsg)

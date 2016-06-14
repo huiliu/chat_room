@@ -26,6 +26,10 @@ enum MessageID {
 
 // 消息包装层
 message RawMessage {
-    required MessageID  id      = 1 [default = MSG_TIME_TICK];  // 消息ID
-    required string     strMsg  = 2;  // 消息内容。需要进一步解包
+    required MessageID  id        = 1 [default = MSG_TIME_TICK];  // 消息ID
+    required uint32     uid       = 2;    // identify sender
+    required uint64     timestamp = 3;    // 时间戳
+
+    optional uint32     clientId = 4;   // 用于内部通讯
+    required string     strMsg    = 5;  // 消息内容。需要进一步解包
 }

@@ -1,8 +1,18 @@
 
 import public "MessageID.proto";
 
+// 用户（权限）类型
+enum USER_PRIORITY_TYPE {
+    UPT_ROOT   = 0;
+    UPT_ADMIN  = 1;
+    UPT_NORMAL = 2;
+}
+
 // 用户信息
 message UserData {
-    required uint32 id       = 1;   // user id
-    required string name     = 2;   // user name
+    required uint32 id          = 1;    // user id
+    required string name        = 2;    // user name
+    required uint32 priority    = 3;    // 权限
+
+    required uint32 chatroom_id = 4;
 }

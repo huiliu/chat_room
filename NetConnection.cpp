@@ -5,6 +5,7 @@
 #include "src/MessageID.pb.h"
 #include "src/version.pb.h"
 #include "iCryptTool.h"
+#include "CommonApi.h"
 
 namespace Net
 {
@@ -102,6 +103,7 @@ void NetConnection::SendCryptKey()
     if (g_key_buff_len != sz) {
         assert("发送密钥失败！");
     }
+    DEBUG_LOG("密钥已发送！");
 }
 
 void NetConnection::SendVersion()
@@ -112,6 +114,7 @@ void NetConnection::SendVersion()
     spRaw->set_strmsg(req.SerializeAsString());
 
     m_spConnMgr->PutInSendQueue(m_connId, spRaw);
+    DEBUG_LOG("已发送版本号!");
 }
 
 void NetConnection::Encrypt(std::shared_ptr<char> spData, uint32_t sz)

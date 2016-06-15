@@ -19,6 +19,12 @@ public:
     void                SetConnId(ConnID connId) { m_ConnId = connId; }
     ConnID              GetConnId() const { return m_ConnId; }
 
+    void                SetPriority(uint32_t p);
+    uint32_t            GetPriority() const;
+
+    void                SetChatroomId(uint32_t cid);
+    uint32_t            GetChatroomId() const;
+
 private:
     UserData    m_UserData;
     ConnID      m_ConnId;

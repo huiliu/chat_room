@@ -6,7 +6,10 @@
 #include "iSubscriber.h"
 #include "src/ChatRoom.pb.h"
 
-typedef std::map<uint32_t, CHATROOM_DATA> MapChatRoomType;
+class Chatroom;
+class User;
+
+typedef std::map<uint32_t, std::shared_ptr<Chatroom>> MapChatRoomType;
 typedef MapChatRoomType::iterator MapChatRoomTypeIterator;
 
 class ChatroomManager : public iSubscriber
@@ -24,14 +27,14 @@ public:
 
     virtual void HandleMessage(std::shared_ptr<RawMessage> spMsg);
 
-    CHATROOM_DATA&   CreateChatroom(const std::string& name,
-                                    const std::string& content);
+    std::shared_ptr<Chatroom>      CreateChatroom(const std::string& name,
+                                                const std::string& content);
+    std::shared_ptr<Chatroom>      FindChatroomById(uint32_t id);
 
-    const std::map<uint32_t, CHATROOM_DATA>&   GetAllChatromm() const;
-    void ChatroomSpeak(uint32_t uid, uint32_t chatroom_id, const std::string& msg);
+    void ChatroomSpeak(User& speaker, uint32_t uChatroomId, const std::string& msg);
 
-    void OnEnterChatroom(uint32_t uid, uint32_t chatroom_id);
-    void OnExitChatroom(uint32_t uid, uint32_t chatroom_id);
+    void OnEnterChatroom(uint32_t uid, uint32_t uChatroomId);
+    void OnExitChatroom(uint32_t uid, uint32_t uChatroomId);
 
 private:
 
@@ -47,6 +50,8 @@ private:
     void    HandleReqQuitChatroom(std::shared_ptr<RawMessage> spMsg);
     // 请求发言聊天室
     void    HandleReqChatroomSpeak(std::shared_ptr<RawMessage> spMsg);
+
+    bool    CanSpeakInChatroom(std::shared_ptr<User> spUser, const ReqChatroomSpeak& req, NOTIFY_SPEAK_FAILED_REASON& result);
 
 private:
     std::shared_ptr<iPublisher> m_spPublisher;

@@ -17,6 +17,15 @@ class User;
         return (ret);\
     }
 
+#ifdef DEBUG
+    #include <iostream>
+    #define DEBUG_LOG(msg) \
+        std::cout << msg << std::endl
+#else
+    #define DEBUG_LOG(msg) do{}while(0)
+#endif
+
+
 std::shared_ptr<User> FindUserById(uint32_t uid);
 
 #endif /* ifndef __CHATROOM_COMMONAPI_H_ */

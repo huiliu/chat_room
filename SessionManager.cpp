@@ -1,9 +1,11 @@
 #include "SessionManager.h"
 #include "iPublisher.h"
 #include "src/Login.pb.h"
+#include "src/version.pb.h"
 #include "NetApi.h"
 #include "User.h"
 #include "UserManager.h"
+#include "CommonApi.h"
 
 SessionManager::SessionManager(std::shared_ptr<iPublisher> spPublisher)
     : m_spPublisher(spPublisher)
@@ -16,6 +18,7 @@ SessionManager::~SessionManager()
 
 int SessionManager::Init()
 {
+    m_spPublisher->Register(MSG_CHECK_VERSION, this);
     m_spPublisher->Register(MSG_REQ_LOGIN, this);
     return 0;
 }
@@ -23,6 +26,7 @@ int SessionManager::Init()
 int SessionManager::Fini()
 {
     m_spPublisher->Unregister(MSG_REQ_LOGIN, this);
+    m_spPublisher->Unregister(MSG_CHECK_VERSION, this);
     return 0;
 }
 
@@ -42,10 +46,17 @@ void SessionManager::HandleMessage(std::shared_ptr<RawMessage> spMsg)
 
 void SessionManager::HandleVersionCheck(std::shared_ptr<RawMessage> spMsg)
 {
+    CHECK_NULL_ASSERT(spMsg);
+    DEBUG_LOG("收到了版本验证回复！");
+
+    NotifyVersionCheck notify;
+    notify.ParseFromString(spMsg->strmsg());
+    DEBUG_LOG(notify.result());
 }
 
 void SessionManager::HandleReqLogin(std::shared_ptr<RawMessage> spMsg)
 {
+    CHECK_NULL_ASSERT(spMsg);
     ReqLogin req;
     req.ParseFromString(spMsg->strmsg());
     UserData data;
@@ -53,7 +64,10 @@ void SessionManager::HandleReqLogin(std::shared_ptr<RawMessage> spMsg)
     data.set_id(spMsg->clientid());   // 使用连接id
     data.set_name(req.username());
 
-    std::shared_ptr<User> spUser = ServerBase::GetInstance()->GetUserMgr()->CreateUser(data);
+    DEBUG_LOG("收到了登陆请求！");
+    DEBUG_LOG(req.username());
+
+    auto spUser = ServerBase::GetInstance()->GetUserMgr()->CreateUser(data);
     spUser->SetConnId(spMsg->clientid());
 
     NotifyLoginResult notify;

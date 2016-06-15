@@ -6,9 +6,9 @@ import public "UserData.proto";
 // 聊天室信息
 message CHATROOM_DATA {
     
-    required int32 id      = 1;  // ID
-    required string name   = 2; // 名字
-    required string notice = 3; // 公告
+    required int32 id      = 1;     // ID
+    required string name   = 2;     // 名字
+    required string notice = 3;     // 公告
 }
 
 // 请求所有聊天室
@@ -60,9 +60,8 @@ enum NOTIFY_JOIN_CHATROOM_RESULT {
 message NotifyJoinChatroomResult
 {
     required MessageID  msg_id = 1 [default = MSG_NOTIFY_JOIN_CHATROOM_RESULT];
-    required NOTIFY_JOIN_CHATROOM_RESULT result = 2;
-    optional CHATROOM_DATA chatroom             = 3;
-    repeated UserData   users                   = 4;
+    required NOTIFY_JOIN_CHATROOM_RESULT result = 2[default = NJCR_SUCCESS];
+    required CHATROOM_DATA chatroom             = 3;
 }
 
 // 请求退出聊天室
@@ -93,17 +92,31 @@ enum CHATROOM_SPEAK_TYPE {
 message ReqChatroomSpeak
 {
     required MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_SPEAK];
-    required int32 id       = 2;  // chatroom id
+    required uint32 id       = 2;  // chatroom id
     required string content = 3; // 发言内容
+}
+
+// 发言失败原因
+enum NOTIFY_SPEAK_FAILED_REASON {
+    NSFR_NOT_IN_CHATROOM = 0;   // 没有加入聊天室
+    NSFR_WRONG_CHATROOM  = 1;   // 不在目标聊天室内
+    NSFR_NO_CHATROOM     = 2;   // 聊天室不存在
+}
+
+// 告知发言失败原因
+message NotifySpeakFailed {
+
+    required MessageID  msg_id = 1 [default = MSG_NOTIFY_SPEAK_FAILED];
+
+    required NOTIFY_SPEAK_FAILED_REASON result = 2;
 }
 
 // 广播发言
 message NotifyChatroomSpeak
 {
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CHATROOM_SPEAK];
-    required int32 chatroom_id        = 2; // chat room id;
-    required CHATROOM_SPEAK_TYPE type = 3;
-    required string username          = 4;   // 发言人姓名
-    required string content           = 5;   // 发言内容
+    required MessageID  msg_id        = 1 [default = MSG_NOTIFY_CHATROOM_SPEAK];
+    required uint32 chatroom_id       = 2;  // chat room id;
+    required CHATROOM_SPEAK_TYPE type = 3 [default = CST_GENERAL];
+    required uint32 speaker           = 4;  // 发言人
+    required string content           = 5;  // 发言内容
 }
-

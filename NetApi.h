@@ -4,6 +4,7 @@
 #include "ServerBase.h"
 #include "ConnectionManager.h"
 #include "CommonApi.h"
+#include "UserManager.h"
 
 namespace NetApi
 {
@@ -28,6 +29,19 @@ void SendPacketToUser(const std::shared_ptr<User> spUser, T& msg)
 }
 
 template<typename T>
+void SendPacketByUid(uint32_t uid, T& msg)
+{
+    ServerBase* pBase = ServerBase::GetInstance();
+    auto spUserMgr = pBase->GetUserMgr();
+    CHECK_NULL_ASSERT(spUserMgr);
+
+    auto spUser = spUserMgr->FindUser(uid);
+    CHECK_NULL_ASSERT(spUser);
+
+    SendPacketToUser(spUser, msg);
+}
+
+template<typename T>
 void SendPacket(ConnID connId, T& msg)
 {
     ServerBase* pBase = ServerBase::GetInstance();
@@ -44,7 +58,6 @@ void SendPacket(ConnID connId, T& msg)
 
     spConnMgr->PutInSendQueue(connId, spMsg);
 }
-
 
 
 }

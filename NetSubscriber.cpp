@@ -51,5 +51,5 @@ void NetSubscriber::HandleReqLogin(std::shared_ptr<RawMessage> pMsg)
 
 void NetSubscriber::HandleSystemTick(std::shared_ptr<RawMessage> pMsg)
 {
-    std::cout << "System Time Tick!" << std::endl;
+    //std::cout << "System Time Tick!" << std::endl;
 }

@@ -10,7 +10,7 @@
 // S -> C 检查协议版本号
 message ReqCheckVersion {
 
-    required MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
+    optional MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
 
     required int32      iVersionNumber = 2 [default = 1];
 }
@@ -24,7 +24,7 @@ enum NOTIFY_VERSION_CHECK_RESULT {
 // C -> S 版本检查结果
 message NotifyVersionCheck {
 
-    required MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
+    optional MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
     required NOTIFY_VERSION_CHECK_RESULT result = 2 [default = NVCR_SUCCESS];
     // Next available id: 1
 }

@@ -13,20 +13,20 @@ message CHATROOM_DATA {
 
 // 请求所有聊天室
 message ReqChatroomList {
-    required MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_LIST];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_LIST];
 }
 
 // 返回所有聊天室信息
 message NotifyChatroomList {
     
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CHATROOM_LIST];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_CHATROOM_LIST];
     repeated CHATROOM_DATA chatrooms = 2;
 }
 
 // 请求创建一个聊天室
 message ReqCreateChatroom {
     
-    required MessageID  msg_id = 1 [default = MSG_REQ_CREATE_CHATROOM];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_CREATE_CHATROOM];
     required string name   = 2;     // 名字
     required string notice = 3;     // 公告
 }
@@ -40,7 +40,7 @@ enum NOTIFY_CREATE_CHATROOM_RESULT {
 // 返回聊天室创建结果
 message NotifyCreateChatroomResult {
     
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_CREATE_CHATROOM_RESULT];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_CREATE_CHATROOM_RESULT];
     required NOTIFY_CREATE_CHATROOM_RESULT result = 2;
     required CHATROOM_DATA chatroom               = 3;
 }
@@ -48,7 +48,7 @@ message NotifyCreateChatroomResult {
 // 请求加入聊天室
 message ReqJoinChatRoom {
     
-    required MessageID  msg_id = 1 [default = MSG_REQ_JOIN_CHATROOM];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_JOIN_CHATROOM];
     required int32 id = 2; // chatroom id
 }
 
@@ -59,7 +59,7 @@ enum NOTIFY_JOIN_CHATROOM_RESULT {
 
 message NotifyJoinChatroomResult
 {
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_JOIN_CHATROOM_RESULT];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_JOIN_CHATROOM_RESULT];
     required NOTIFY_JOIN_CHATROOM_RESULT result = 2[default = NJCR_SUCCESS];
     required CHATROOM_DATA chatroom             = 3;
 }
@@ -67,7 +67,7 @@ message NotifyJoinChatroomResult
 // 请求退出聊天室
 message ReqQuitChatroom
 {
-    required MessageID  msg_id = 1 [default = MSG_REQ_QUIT_CHATROOM];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_QUIT_CHATROOM];
     required uint32 chatroom_id = 2;    // chatroom id
 }
 
@@ -78,7 +78,7 @@ enum NOTIFY_QUIT_CHATROOM_RESULT {
 
 message NotifyQuitChatroom
 {
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_QUIT_CHATROOM_RESULT];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_QUIT_CHATROOM_RESULT];
     required NOTIFY_QUIT_CHATROOM_RESULT result = 2;
 }
 
@@ -91,7 +91,7 @@ enum CHATROOM_SPEAK_TYPE {
 // 聊天室发言
 message ReqChatroomSpeak
 {
-    required MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_SPEAK];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_CHATROOM_SPEAK];
     required uint32 id       = 2;  // chatroom id
     required string content = 3; // 发言内容
 }
@@ -106,7 +106,7 @@ enum NOTIFY_SPEAK_FAILED_REASON {
 // 告知发言失败原因
 message NotifySpeakFailed {
 
-    required MessageID  msg_id = 1 [default = MSG_NOTIFY_SPEAK_FAILED];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_SPEAK_FAILED];
 
     required NOTIFY_SPEAK_FAILED_REASON result = 2;
 }
@@ -114,7 +114,7 @@ message NotifySpeakFailed {
 // 广播发言
 message NotifyChatroomSpeak
 {
-    required MessageID  msg_id        = 1 [default = MSG_NOTIFY_CHATROOM_SPEAK];
+    optional MessageID  msg_id        = 1 [default = MSG_NOTIFY_CHATROOM_SPEAK];
     required uint32 chatroom_id       = 2;  // chat room id;
     required CHATROOM_SPEAK_TYPE type = 3 [default = CST_GENERAL];
     required uint32 speaker           = 4;  // 发言人

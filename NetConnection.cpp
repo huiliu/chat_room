@@ -60,13 +60,13 @@ void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_
         Decrypt(m_readBuff, byte_transferred);
 
         auto spMsg = std::make_shared<RawMessage>();
-        spMsg->set_clientid(GetConnId());
         // TODO: 
         // 1. 如果protobuf有字段为0，接收到的数据中会有'\0'存在，
         // 而在C/C++的字符数组中'\0'表示结尾，导致ParseFromString没有读取到所
         // 有的数据
         // 2. ParseFromString是如何处理内存的。
         if (spMsg->ParseFromString(m_readBuff)) {
+            spMsg->set_clientid(GetConnId());
             m_spConnMgr->PutInRecvQueue(m_connId, spMsg);    
         }
 

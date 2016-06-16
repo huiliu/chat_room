@@ -13,6 +13,7 @@ class NetSubscriber;
 class Timer;
 class ChatroomManager;
 class UserManager;
+class SessionManager;
 
 class ServerBase
 {
@@ -48,6 +49,7 @@ private:
     std::shared_ptr<NetSubscriber>      m_spSub;
     std::shared_ptr<ChatroomManager>    m_spChatroomMgr;
     std::shared_ptr<UserManager>        m_spUserMgr;
+    std::shared_ptr<SessionManager>     m_spSessionMgr;
 };
 
 #endif

@@ -5,6 +5,7 @@
 #include "MessageDispatcher.h"
 #include "UserManager.h"
 #include "ChatroomManager.h"
+#include "SessionManager.h"
 
 ServerBase* ServerBase::m_sInstance = nullptr;
 
@@ -54,6 +55,9 @@ int ServerBase::Init()
 
     m_spUserMgr = std::shared_ptr<UserManager>(new UserManager(m_spMsgMgr));
     m_spUserMgr->Init();
+
+    m_spSessionMgr = std::make_shared<SessionManager>(m_spMsgMgr);
+    m_spSessionMgr->Init();
 
     return 0;
 }

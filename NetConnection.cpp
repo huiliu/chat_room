@@ -29,6 +29,12 @@ ip::tcp::socket& NetConnection::socket()
 
 void NetConnection::Start()
 {
+    if (m_bFirstPacket) {
+        m_bFirstPacket = false;
+        SendCryptKey();
+
+        SendVersion();
+    }
     // 必须保证回调函数执行完之前，m_readBuff是有效的
     boost::asio::async_read(m_socket, boost::asio::buffer(m_readBuff), boost::asio::transfer_at_least(10),
         boost::bind(&NetConnection::AsyncReadHandler, this,
@@ -50,18 +56,16 @@ void NetConnection::SendPacket(std::shared_ptr<RawMessage> pMsg)
 void NetConnection::AsyncReadHandler(const boost::system::error_code& err, size_t byte_transferred)
 {
     if (!err) {
-        if (m_bFirstPacket) {
-            m_bFirstPacket = false;
-            SendCryptKey();
 
-            SendVersion();
-            return;
-        }
-
-        Decrypt(std::shared_ptr<char>(m_readBuff), byte_transferred);
+        Decrypt(m_readBuff, byte_transferred);
 
         auto spMsg = std::make_shared<RawMessage>();
         spMsg->set_clientid(GetConnId());
+        // TODO: 
+        // 1. 如果protobuf有字段为0，接收到的数据中会有'\0'存在，
+        // 而在C/C++的字符数组中'\0'表示结尾，导致ParseFromString没有读取到所
+        // 有的数据
+        // 2. ParseFromString是如何处理内存的。
         if (spMsg->ParseFromString(m_readBuff)) {
             m_spConnMgr->PutInRecvQueue(m_connId, spMsg);    
         }
@@ -117,17 +121,17 @@ void NetConnection::SendVersion()
     DEBUG_LOG("已发送版本号!");
 }
 
-void NetConnection::Encrypt(std::shared_ptr<char> spData, uint32_t sz)
+void NetConnection::Encrypt(char* pData, uint32_t sz)
 {
-    if (nullptr != m_spCryTool) {
-        m_spCryTool->Encrypt(spData, sz);    
+    if (m_spCryTool) {
+        m_spCryTool->Encrypt(pData, sz);    
     }
 }
 
-void NetConnection::Decrypt(std::shared_ptr<char> spData, uint32_t sz)
+void NetConnection::Decrypt(char* pData, uint32_t sz)
 {
-    if (nullptr != m_spCryTool) {
-        m_spCryTool->Decrypt(spData, sz);
+    if (m_spCryTool) {
+        m_spCryTool->Decrypt(pData, sz);
     }
 }
 

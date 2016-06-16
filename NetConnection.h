@@ -40,8 +40,8 @@ public:
 
 private:
 
-    void    Encrypt(std::shared_ptr<char> spData, uint32_t sz);
-    void    Decrypt(std::shared_ptr<char> spData, uint32_t sz);
+    void    Encrypt(char* pData, uint32_t sz);
+    void    Decrypt(char* pData, uint32_t sz);
 
     void    SendCryptKey();     // 发送密钥
     void    SendVersion();      // 发送协议号

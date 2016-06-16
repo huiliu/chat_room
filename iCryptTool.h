@@ -21,8 +21,8 @@ class iCryptTool
 public:
     virtual ~iCryptTool() {}
 
-    virtual void Encrypt(std::shared_ptr<char> spData, uint32_t uLen) = 0;
-    virtual void Decrypt(std::shared_ptr<char> spData, uint32_t uLen) = 0;
+    virtual void Encrypt(char* pData, uint32_t uLen) = 0;
+    virtual void Decrypt(char* pData, uint32_t uLen) = 0;
 };
 
 

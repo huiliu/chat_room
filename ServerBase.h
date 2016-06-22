@@ -28,6 +28,9 @@ public:
 
     static ServerBase* GetInstance();
 
+    // FIXME: 这个设计有点诡异
+    // 因为NetConnector中创建socket时，需要io_service，但又没有地方保存
+    boost::asio::io_service&    GetIoService() { return io_service; }
     int Init();
     int Fini();
 

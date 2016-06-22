@@ -7,9 +7,9 @@
 #include <string>
 #include "NetConnection.h"
 
-namespace Net{
-
 using namespace boost::asio;
+
+namespace Net{
 
 class ConnectionManager;
 class NetConnection;

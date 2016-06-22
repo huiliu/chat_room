@@ -1,5 +1,8 @@
 #include "NetConnector.h"
+#include "ServerBase.h"
 #include "iCryptTool.h"
+#include "ConnectionManager.h"
+#include "NetConnection.h"
 #include "src/MessageID.pb.h"
 #include <boost/bind.hpp>
 
@@ -9,15 +12,15 @@
 namespace Net
 {
 
-NetConnector::NetConnector(io_service& io)
-    : m_Socket(io)
-    , m_Resolver(io)
+NetConnector::NetConnector(const std::string& host, const std::string& service, std::shared_ptr<ConnectionManager>& spConnMgr)
+    : m_ServerName(host)
+    , m_ServicePort(service)
+    , m_spConnMgr(spConnMgr)
 {
 }
 
 NetConnector::~NetConnector()
 {
-    m_Socket.close();
 }
 
 int NetConnector::Init()
@@ -32,65 +35,26 @@ int NetConnector::Fini()
 
 int NetConnector::Start()
 {
-    ip::tcp::resolver::query query("127.0.0.1", "9095");
-    ip::tcp::resolver::iterator endpoint_iterator = m_Resolver.resolve(query);
+    int retval = 1;
+    m_spConn = m_spConnMgr->CreateConnection(
+            ServerBase::GetInstance()->GetIoService()
+            );
+    if (m_spConn) {
+        ip::tcp::resolver::query query(m_ServerName, m_ServicePort);
+        ip::tcp::resolver resolver(ServerBase::GetInstance()->GetIoService());
+        ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
-    // TODO: 如何判断connect成功与否
-    boost::asio::connect(m_Socket, endpoint_iterator);
-
-    boost::asio::async_read(m_Socket, boost::asio::buffer(m_readBuff), 
-        boost::asio::transfer_at_least(1),
-        boost::bind(&NetConnector::AsyncReadHandler, this, 
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-
-    return 0;
-}
-
-void NetConnector::AsyncReadHandler(const boost::system::error_code& err,
-    size_t byte_transferred)
-{
-    if (!err) {
-        return;
+        // TODO: 如何判断connect成功与否
+        boost::asio::connect(m_spConn->socket(), endpoint_iterator);
+        
+        retval = 0;
     }
 
-    boost::asio::async_read(m_Socket, boost::asio::buffer(m_readBuff), 
-        boost::asio::transfer_at_least(1),
-        boost::bind(&NetConnector::AsyncReadHandler, this, 
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-}
-
-void NetConnector::AsyncWriteHandler(const boost::system::error_code& err,
-    size_t byte_transferred)
-{
-    if (!err) {
-        // 发送失败 
-    }
-    else
-    {
-        // 发送成功
-    }
+    return retval;
 }
 
 void NetConnector::SendPacket(std::shared_ptr<RawMessage> spMsg)
 {
-    spMsg->SerializeToString(&m_writeBuff);
-    
-    boost::asio::async_write(m_Socket, boost::asio::buffer(m_writeBuff),
-        boost::bind(&NetConnector::AsyncWriteHandler, this,
-                boost::asio::placeholders::error,
-                boost::asio::placeholders::bytes_transferred));
+    m_spConn->SendPacket(spMsg);
 }
-
-void NetConnector::Encrypt(char* pData, uint32_t sz)
-{
-    m_spCryTool->Encrypt(pData, sz);
-}
-
-void NetConnector::Decrypt(char* pData, uint32_t sz)
-{
-    m_spCryTool->Decrypt(pData, sz);
-}
-
 }

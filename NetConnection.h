@@ -7,11 +7,12 @@
 #include <string>
 #include "CommonDataType.h"
 
+using namespace boost::asio;
 class RawMessage;
 class iCryptTool;
+
 namespace Net{
 
-using namespace boost::asio;
 
 const   uint32_t RECEVIER_BUFFER_SIZE = 8196; // 接收网络数据缓冲区大小
 
@@ -33,12 +34,11 @@ public:
     void    SetConnId(ConnID cid) { m_connId = cid; }
     ConnID  GetConnId() const { return m_connId; }
 
-    void AsyncReadHandler(const boost::system::error_code& err, size_t byte_transferred);
-    void AsyncWriteHandler(const boost::system::error_code& err, size_t byte_transferred);
-
     void SendPacket(std::shared_ptr<RawMessage> pMsg);
 
 private:
+    void AsyncReadHandler(const boost::system::error_code& err, size_t byte_transferred);
+    void AsyncWriteHandler(const boost::system::error_code& err, size_t byte_transferred);
 
     void    Encrypt(char* pData, uint32_t sz);
     void    Decrypt(char* pData, uint32_t sz);

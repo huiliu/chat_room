@@ -14,10 +14,14 @@ class iCryptTool;
 
 namespace Net
 {
+
+class NetConnection;
+class ConnectionManager;
+
 class NetConnector
 {
 public:
-    NetConnector(io_service& io);
+    NetConnector(const std::string& host, const std::string& service, std::shared_ptr<ConnectionManager>& spConnMgr);
     ~NetConnector ();
 
     NetConnector(const NetConnector&) = delete;
@@ -28,23 +32,19 @@ public:
     int Fini();
 
     int Start();
-
-    void AsyncReadHandler(const boost::system::error_code& err, size_t bytes_transferred);
-    void AsyncWriteHandler(const boost::system::error_code& err, size_t bytes_transferred);
-
     void SendPacket(std::shared_ptr<RawMessage> spMsg);
 
 private:
-    void Encrypt(char* pData, uint32_t sz);
-    void Decrypt(char* pData, uint32_t sz);
-
-private:
-    ip::tcp::socket                 m_Socket;
-    ip::tcp::resolver               m_Resolver;
+    std::string                     m_ServerName;
+    std::string                     m_ServicePort;
+    std::shared_ptr<ConnectionManager>  m_spConnMgr;
+    std::shared_ptr<NetConnection>  m_spConn;
     std::shared_ptr<iCryptTool>     m_spCryTool;
 
     char                            m_readBuff[8096];
     std::string                     m_writeBuff;
 };
+
+
 }
 #endif /* ifndef __CHATROOM_NETCONNECTOR_H__ */

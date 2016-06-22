@@ -16,9 +16,9 @@
 #include "iSubscriber.h"
 #include "CommonDataType.h"
 
-namespace Net {
-
 using namespace boost::asio::ip;
+
+namespace Net {
 
 class NetAcceptor;
 class NetConnection;

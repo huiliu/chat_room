@@ -81,7 +81,7 @@ void ChatroomManager::HandleMessage(std::shared_ptr<RawMessage> spMsg)
             HandleReqJoinChatroom(spMsg);
             break;
         case MSG_REQ_CREATE_CHATROOM:
-            HandleReqJoinChatroom(spMsg);
+            HandleReqCreateChatroom(spMsg);
             break;
         case MSG_REQ_CHATROOM_LIST:
             HandleReqChatroomList(spMsg);

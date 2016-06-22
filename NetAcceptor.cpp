@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 #include <cassert>
+#include "CommonApi.h"
 
 namespace Net
 {
@@ -47,7 +48,7 @@ void NetAcceptor::AcceptHandler(ConnID cId, const boost::system::error_code& err
     std::shared_ptr<NetConnection> spConn = m_pConnMgr->FindConnection(cId);
     if (!err && nullptr != spConn) {
         spConn->Start();
-
+        DEBUG_LOG("有新连接进入!");
     }
     else
     {

@@ -24,7 +24,7 @@ enum NOTIFY_VERSION_CHECK_RESULT {
 // C -> S 版本检查结果
 message NotifyVersionCheck {
 
-    optional MessageID  msg_id = 1 [default = MSG_CHECK_VERSION];
+    optional MessageID  msg_id = 1 [default = MSG_CHECK_VERSION_RESULT];
     required NOTIFY_VERSION_CHECK_RESULT result = 2 [default = NVCR_SUCCESS];
     // Next available id: 1
 }

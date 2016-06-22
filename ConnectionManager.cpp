@@ -109,9 +109,15 @@ void ConnectionManager::FlushSendQueue()
     while (!m_queueSend.empty()) {
         NetMessageEntity& item = m_queueSend.front();
         std::shared_ptr<NetConnection> spConn = FindConnection(item.first);
-        BOOST_ASSERT(nullptr != spConn);
+        assert(nullptr != spConn);
         if (nullptr != spConn) {
             spConn->SendPacket(item.second);
+#ifdef DEBUG
+    #include <iostream>
+            std::cout << "发送协议：id=" << item.second->id()
+               <<'\t' << "size=" << item.second->ByteSize()
+               << std::endl;
+#endif
         }
         m_queueSend.pop_front();
     }
@@ -137,6 +143,12 @@ void ConnectionManager::FlushRecvQueue()
     while (!m_queueRecv.empty()) {
         NetMessageEntity& msg = m_queueRecv.front();
         m_spMgr->Notify(msg.second);
+#ifdef DEBUG
+    #include <iostream>
+            std::cout << "收到协议：id=" << msg.second->id()
+               <<'\t' << "size=" << msg.second->ByteSize()
+               << std::endl;
+#endif
 
         m_queueRecv.pop_front();
     }

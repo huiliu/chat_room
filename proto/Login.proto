@@ -4,7 +4,7 @@ import public "MessageID.proto";
 
 message ReqLogin {
 
-    required MessageID  msg_id = 1 [default = MSG_REQ_LOGIN];
+    optional MessageID  msg_id = 1 [default = MSG_REQ_LOGIN];
     required string username        = 2;
     required string password        = 3;
 }
@@ -18,6 +18,6 @@ enum NOTIFY_LOGIN_RESULT
 // 通知登陆认证结果
 message NotifyLoginResult {
     
-    required MessageID  msg_id = 1 [default = MSG_REQ_LOGIN];
+    optional MessageID  msg_id = 1 [default = MSG_NOTIFY_LOGIN_RESULT];
     required NOTIFY_LOGIN_RESULT    result = 2;
 }

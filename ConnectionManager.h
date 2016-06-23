@@ -42,6 +42,7 @@ public:
 
     std::shared_ptr<NetConnection> CreateConnection(boost::asio::io_service& io_service);
     std::shared_ptr<NetConnection> FindConnection(ConnID cId);
+    size_t                          GetConnectionCount() const { return m_mapConn.size(); }
 
     void RemoveConnection(ConnID cid);
     void UpdateConnStatus(uint64_t, CONN_STATUS status);

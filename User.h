@@ -9,6 +9,9 @@ public:
     explicit User(const UserData&);
     ~User();
 
+    User(const User&) = delete;
+    User(User&&) = delete;
+    User& operator=(const User&) = delete;
 
     void                SetUserName(const std::string& name);
     const std::string&  GetUserName() const { return m_UserData.name(); }

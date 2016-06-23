@@ -58,5 +58,6 @@ void Chatroom::AddUser(uint32_t uid)
 
 uint32_t Chatroom::RemoveUser(uint32_t uid)
 {
-    return *(std::remove(m_VecUser.begin(), m_VecUser.end(), uid));
+    m_VecUser.erase(std::remove(m_VecUser.begin(), m_VecUser.end(), uid), m_VecUser.end());
+    return uid;
 }

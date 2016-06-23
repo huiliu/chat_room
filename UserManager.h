@@ -22,6 +22,7 @@ public:
 
     std::shared_ptr<User>   CreateUser(const UserData& data);
     std::shared_ptr<User>   FindUser(uint32_t uid);
+    size_t                  GetUserCount() const { return m_mapUserData.size(); }
 
 private:
     std::shared_ptr<iPublisher> m_spPublisher;

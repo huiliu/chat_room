@@ -21,10 +21,33 @@ class User:
 
     """Docstring for User. """
 
-    def __init__(self):
-        """TODO: to be defined1. """
-        
+    def __init__(self, data=UserData()):
+       self.data = data
 
+    @property
+    def name(self):
+        return self.data.name
+
+    @name.setter
+    def name(self, value):
+        self.data.name = value
+
+    @property
+    def priority(self):
+        return self.data.priority
+
+    @priority.setter
+    def priority(self, value):
+        self.data.priority = value
+
+    @property
+    def chatroomId(self):
+        return self.data.chatroom_id
+
+    @chatroomId.setter
+    def chatroomId(self, value):
+        self.data.chatroom_id = value
+    
 class Connection:
     def __init__(self, endpoint):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -155,7 +178,15 @@ class ChatroomManager(iObserver):
         pass
 
     def _HandleNotifyCreateChatroomResult(self, data):
-        pass
+        createResult = NotifyCreateChatroomResult()
+        createResult.ParseFromString(str(data.strMsg))
+
+        if NCCR_SUCCESS == createResult.result:
+            chatroomInfo = createResult.chatroom
+            print(u"聊天室创建成功！\nID:%d\nName:%s\nNotice:%s\n" %
+                    (chatroomInfo.id, chatroomInfo.name, chatroomInfo.notice))
+        else:
+            print("聊天室创建失败！")
 
     def _HandleNotifyJoinChatroomResult(self, data):
         pass
@@ -222,17 +253,29 @@ class SessionManager(iObserver):
         elif NLR_SUCCESS == loginResult.result:
             print("登陆成功!")
 
+            reqCreate = ReqCreateChatroom()
+            reqCreate.name = "Left Union"
+            reqCreate.notice = "Drive"
+
+            self.connection.SendPackect(data.uid, reqCreate)
+
+class ServerBase:
+    def __init__(self):
         
+        self.conn = Connection (('127.0.0.1', 9095))
+
+        self.messageDispatcher = MessageDispatcher();
+
+        self.userMgr = UserManager(self.messageDispatcher, self.conn)
+        self.chatroomMgr = ChatroomManager (self.messageDispatcher, self.conn)
+        self.sessionMgr = SessionManager (self.messageDispatcher, self.conn)
+
+    def start(self):
+        self.conn.start(self.messageDispatcher)
+
 def main():
-    conn = Connection (('127.0.0.1', 9095))
-
-    messageDispatcher = MessageDispatcher();
-
-    userMgr = UserManager(messageDispatcher, conn)
-    chatroomMgr = ChatroomManager (messageDispatcher, conn)
-    sessionMgr = SessionManager (messageDispatcher, conn)
-
-    conn.start(messageDispatcher)
+    base = ServerBase()
+    base.start()
 
 if __name__ == '__main__':
     main()

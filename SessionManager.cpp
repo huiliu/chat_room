@@ -73,7 +73,7 @@ void SessionManager::HandleReqLogin(std::shared_ptr<RawMessage> spMsg)
     NotifyLoginResult notify;
     notify.set_result(NLR_SUCCESS);
 
-    NetApi::SendPacket(spMsg->clientid(), notify);
+    NetApi::SendPacketToUser(spUser, notify);
 }
 
 void SessionManager::HandleLogout(std::shared_ptr<RawMessage> spMsg)

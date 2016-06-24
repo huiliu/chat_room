@@ -122,12 +122,11 @@ void ChatroomManager::HandleReqCreateChatroom(std::shared_ptr<RawMessage> spMsg)
 
     NotifyCreateChatroomResult notify;
     notify.set_result(NCCR_SUCCESS);
-    CHATROOM_DATA* pData = notify.mutable_chatroom();
+    CHATROOM_DATA& pData = *notify.mutable_chatroom();
     // TODO: protobuf 中自定义对象的赋值问题
-    pData->operator=(spChatroom->GetChatroomData());
+    pData = spChatroom->GetChatroomData();
 
     NetApi::SendPacketToUser(spUser, notify);
-
 }
 
 void ChatroomManager::HandleReqJoinChatroom(std::shared_ptr<RawMessage> spMsg)
